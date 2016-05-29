@@ -1,8 +1,4 @@
 <?php
-/**
-* revised version of VMenu to support mobile drop-down menu 
-**/
-
 // init widgets
 function themeVMenuWidgetInit() {
     register_widget('VMenuWidget');
@@ -92,22 +88,18 @@ class VMenuWidget extends WP_Widget
 
     function VMenuWidget()
     {
-        $widget_ops = array('classname' => 'vmenu', 'description' => __('Use this widget to add one of your custom menus as a widget.', THEME_NS));
-        parent::__construct(false, __('Vertical Menu', THEME_NS), $widget_ops);
+        $widget_ops = array('classname' => 'vmenu', 'description' => __('Use this widget to add one of your custom menus as a widget.', 'default'));
+        parent::__construct(false, __('Vertical Menu', 'default'), $widget_ops);
     }
 
     function widget($args, $instance)
     {
-        extract($args);
         $title = apply_filters('widget_title', $instance['title'], $instance, $this->id_base);
-        echo $before_widget;
-        echo $before_title . $title . $after_title;
-        echo '<div class="data-control-id-3499 bd-blockcontent bd-tagstyles bd-custom-bulletlist shape-only">';
-        echo '  <div class="data-control-id-127688 bd-verticalmenu-3">';
-        echo '    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#vmenu">';
-        echo '       <span class="icon-list"></span>';
-        echo '    </button>';
-        echo '    <div class="bd-container-inner collapse navbar-collapse" id="vmenu">';
+        echo $args['before_widget'];
+        echo $args['before_title'] . $title . $args['after_title'];
+        echo '<div class=" bd-blockcontent bd-tagstyles bd-custom-bulletlist shape-only">';
+        echo '  <div class=" bd-verticalmenu-3">';
+        echo '    <div class="bd-container-inner">';
         echo theme_get_menu(array(
             'source' => $instance['source'],
             'depth' => theme_get_option('theme_vmenu_depth'),
@@ -123,7 +115,7 @@ class VMenuWidget extends WP_Widget
         echo '    </div>';
         echo '  </div>';
         echo '</div>';
-        echo $after_widget;
+        echo $args['after_widget'];
     }
 
     function update($new_instance, $old_instance)
@@ -144,18 +136,18 @@ class VMenuWidget extends WP_Widget
 
         // Get menus
         $menus = get_terms('nav_menu', array('hide_empty' => false));
-        $sources = array('Pages' => __('Pages', THEME_NS), 'Categories' => __('Categories', THEME_NS), 'Custom Menu' => __('Custom Menu', THEME_NS));
+        $sources = array('Pages' => __('Pages', 'default'), 'Categories' => __('Categories', 'default'), 'Custom Menu' => __('Custom Menu', 'default'));
         if (theme_woocommerce_enabled())
-            $sources['Products Categories'] = __('Products Categories', THEME_NS);
+            $sources['Products Categories'] = __('Products Categories', 'default');
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', THEME_NS) ?></label>
+            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'default') ?></label>
             <input type="text" class="widefat" id="<?php echo $this->get_field_id('title'); ?>"
                    name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $title; ?>"/>
         </p>
         <p>
             <label
-                for="<?php echo $this->get_field_id('source'); ?>"><?php echo __('Source', THEME_NS) . ':'; ?></label>
+                for="<?php echo $this->get_field_id('source'); ?>"><?php echo __('Source', 'default') . ':'; ?></label>
             <select class="widefat" id="<?php echo $this->get_field_id('source'); ?>"
                     name="<?php echo $this->get_field_name('source'); ?>"
                     onchange="var s = jQuery('.p-<?php echo $this->get_field_id('nav_menu'); ?>'); if (this.value == 'Custom Menu') s.show(); else s.hide();">
@@ -171,11 +163,11 @@ class VMenuWidget extends WP_Widget
             <?php
             // If no menus exists, direct the user to go and create some.
             if (!$menus) {
-                printf(__('No menus have been created yet. <a href="%s">Create some</a>.', THEME_NS), admin_url('nav-menus.php'));
+                printf(__('No menus have been created yet. <a href="%s">Create some</a>.', 'default'), admin_url('nav-menus.php'));
             } else {
                 ?>
                 <label
-                    for="<?php echo $this->get_field_id('nav_menu'); ?>"><?php _e('Select Menu:', THEME_NS); ?></label>
+                    for="<?php echo $this->get_field_id('nav_menu'); ?>"><?php _e('Select Menu:', 'default'); ?></label>
                 <br/>
                 <select class="widefat" id="<?php echo $this->get_field_id('nav_menu'); ?>"
                         name="<?php echo $this->get_field_name('nav_menu'); ?>">

@@ -77,7 +77,7 @@ if (!is_page() || theme_get_meta_option($post->ID, 'theme_show_page_title')) {
 </div>
 	
 		<div class=" bd-posticonauthor-24">
-    <a href="<?php echo get_author_posts_url(get_the_author_meta('ID')) ?>" title="<?php echo esc_attr(__('View all posts by ' . get_the_author(), THEME_NS)) ?>">
+    <a href="<?php echo get_author_posts_url(get_the_author_meta('ID')) ?>" title="<?php echo esc_attr(__('View all posts by ' . get_the_author(), 'default')) ?>">
         <span class=" bd-icon bd-icon-41"><span><?php echo get_the_author(); ?></span></span>
     </a>
 </div>
@@ -125,14 +125,14 @@ if (theme_is_preview() && is_singular()) {
 		<div class=" bd-posticoncomments-31">
     <?php if (comments_open() && theme_get_option('theme_allow_comments')) : ?>
     <?php comments_popup_link(
-                '<span class=" bd-icon bd-icon-60"><span>'.__('Leave a comment', THEME_NS).'</span></span>',
-    '<span class=" bd-icon bd-icon-60"><span>'.__('1 Comment', THEME_NS).'</span></span>',
-    '<span class=" bd-icon bd-icon-60"><span>'.__('% Comments', THEME_NS).'</span></span>'); ?>
+                '<span class=" bd-icon bd-icon-60"><span>'.__('Leave a comment', 'default').'</span></span>',
+    '<span class=" bd-icon bd-icon-60"><span>'.__('1 Comment', 'default').'</span></span>',
+    '<span class=" bd-icon bd-icon-60"><span>'.__('% Comments', 'default').'</span></span>'); ?>
     <?php endif ?>
 </div>
 	
 		<?php if ($post && !is_singular() && !theme_is_empty_html('Læs mere...')): ?>
-    <a class="bd-postreadmore-6 bd-button-19 "   title="<?php echo strip_tags('Læs mere...') ?>" href="<?php echo get_permalink($post->ID) ?>"><?php _e('Læs mere...'); ?></a>
+    <a class="bd-postreadmore-6 bd-button-19 "   title="<?php echo strip_tags('Læs mere...') ?>" href="<?php echo get_permalink($post->ID) ?>"><?php _e('Læs mere...', 'default'); ?></a>
 <?php endif; ?>
     </div>
 </div>

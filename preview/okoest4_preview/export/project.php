@@ -44,7 +44,9 @@ function theme_get_project() {
         'preview_nonce' => theme_get_preview_nonce(),
         'plugin_version' => CoreUpdateHelper::getPreparedVersion(),
         'active_plugins' => theme_get_plugins_info(),
+        'ask_import_content' => !get_option('themler_hide_import_notice') && file_exists("$base_template_dir/content"),
     )); ?>;
 <?php
+    update_option('themler_hide_import_notice', true); // do not ask again
 }
 theme_add_export_action('theme_get_project');

@@ -18,6 +18,11 @@
     window._$ = jQuery.noConflict(themeHasJQuery);
 </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--[if lte IE 9]>
+<link rel="stylesheet" type="text/css" href="<?php echo get_bloginfo('template_url', 'display') . '/layout.ie.css' ?>" />
+<script src="<?php echo get_bloginfo('template_url', 'display') . '/layout.ie.js' ?>"></script>
+<![endif]-->
+<script src="<?php echo get_bloginfo('template_url', 'display') . '/layout.core.js' ?>"></script>
 <script src="<?php echo get_bloginfo('template_url', 'display'); ?>/CloudZoom.js?ver=<?php echo wp_get_theme()->get('Version'); ?>" type="text/javascript"></script>
     
     <?php wp_head(); ?>
@@ -104,7 +109,7 @@
 
 <div id="wp-footer">
     <?php wp_footer(); ?>
-    <!-- <?php printf(__('%d queries. %s seconds.', THEME_NS), get_num_queries(), timer_stop(0, 3)); ?> -->
+    <!-- <?php printf(__('%d queries. %s seconds.', 'default'), get_num_queries(), timer_stop(0, 3)); ?> -->
 </div>
 </body>
 </html>

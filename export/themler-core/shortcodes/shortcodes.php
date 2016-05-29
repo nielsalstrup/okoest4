@@ -14,9 +14,9 @@
  */
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
-require_once 'shortcodes-helper.php';
-require_once 'shortcodes-effects.php';
-require_once 'shortcodes-styles.php';
+require_once(dirname(__FILE__) . '/shortcodes-helper.php');
+require_once(dirname(__FILE__) . '/shortcodes-effects.php');
+require_once(dirname(__FILE__) . '/shortcodes-styles.php');
 
 function themler_init_filters() {
     if (false !== has_filter('theme_the_content', 'theme_column_filter')) {
@@ -25,6 +25,10 @@ function themler_init_filters() {
     }
 
     add_filter('widget_text', 'do_shortcode', 11); // Allow [SHORTCODES] in Widgets
+
+    add_filter('the_content', 'ShortcodesUtility::convertBadContent', 0);
+    add_filter('widget_text', 'ShortcodesUtility::convertBadContent', 0);
+    add_filter('theme_the_content', 'ShortcodesUtility::convertBadContent', 0);
 
     // collect such shortcodes as [row_1], [column_1], ect
     add_filter('the_content', 'ShortcodesUtility::collectShortcodes', 0);
@@ -50,7 +54,8 @@ function themler_init_filters() {
 }
 add_action('init', 'themler_init_filters');
 
-require_once 'deprecated-shortcodes.php';
+require_once(dirname(__FILE__) . '/deprecated-shortcodes.php');
+require_once(dirname(__FILE__) . '/upage-shortcodes.php');
 
 function themler_shortcodes_icon_state_style($id, $args) {
     $picture = empty($args['picture']) ? '' : $args['picture'];
@@ -177,7 +182,7 @@ function themler_shortcodes_anchor($atts) {
 add_shortcode('anchor', 'themler_shortcodes_anchor');
 
 function themler_shortcodes_subscribe_rss() {
-    return '<a class="button rss-subscribe" href="' . get_bloginfo('rss2_url') . '" title="' . __('RSS Feeds', THEME_NS) . '">' . __('RSS Feeds', THEME_NS) . '</a>';
+    return '<a class="button rss-subscribe" href="' . get_bloginfo('rss2_url') . '" title="' . __('RSS Feeds', 'default') . '">' . __('RSS Feeds', 'default') . '</a>';
 }
 add_shortcode('rss', 'themler_shortcodes_subscribe_rss');
 
@@ -195,21 +200,21 @@ function themler_shortcode_advertisement($atts) {
             $ad .= '<div class="cleared"></div>';
         return $ad;
     else:
-        return '<p class="error"><strong>[ad]</strong> ' . sprintf(__("Empty ad slot (#%s)!", THEME_NS), ShortcodesUtility::escape($code)) . '</p>';
+        return '<p class="error"><strong>[ad]</strong> ' . sprintf(__("Empty ad slot (#%s)!", 'default'), ShortcodesUtility::escape($code)) . '</p>';
     endif;
 }
 add_shortcode('ad', 'themler_shortcode_advertisement');
 
 function themler_shortcode_go_to_top() {
-    return sprintf('<a class="button" href="#">' . __('Top', THEME_NS) . '</a>');
+    return sprintf('<a class="button" href="#">' . __('Top', 'default') . '</a>');
 }
 add_shortcode('top', 'themler_shortcode_go_to_top');
 // login
 function themler_shortcode_login_link() {
     if (is_user_logged_in())
-        return sprintf('<a class="login-link" href="%1$s">%2$s</a>', admin_url(), __('Site Admin', THEME_NS));
+        return sprintf('<a class="login-link" href="%1$s">%2$s</a>', admin_url(), __('Site Admin', 'default'));
     else
-        return sprintf('<a class="login-link" href="%1$s">%2$s</a>', wp_login_url(), __('Log in', THEME_NS));
+        return sprintf('<a class="login-link" href="%1$s">%2$s</a>', wp_login_url(), __('Log in', 'default'));
 }
 add_shortcode('login_link', 'themler_shortcode_login_link');
 // blog title
@@ -239,7 +244,7 @@ function themler_shortcode_rss_url() {
 add_shortcode('rss_url', 'themler_shortcode_rss_url');
 
 function themler_shortcode_rss_title() {
-    return sprintf(__('%s RSS Feed', THEME_NS), get_bloginfo('name'));
+    return sprintf(__('%s RSS Feed', 'default'), get_bloginfo('name'));
 }
 add_shortcode('rss_title', 'themler_shortcode_rss_title');
 
@@ -1987,7 +1992,7 @@ function themler_shortcode_columns($atts, $content = '', $tag = '') {
     $content = ShortcodesUtility::doShortcode($content);
     list($style_tag, $additional_class, $selector) = ShortcodesEffects::css($id, $atts);
 
-    $row_classes = array('bd-columns');
+    $row_classes = array('row');
     $classes = array($additional_class);
 
     if (ShortcodesUtility::getBool($atts['collapse_spacing'])) {
@@ -2018,10 +2023,10 @@ function themler_shortcode_columns($atts, $content = '', $tag = '') {
     }
 
     if (ShortcodesUtility::getBool($atts['auto_height'])) {
-        $row_classes[] = 'bd-columns-flex';
+        $row_classes[] = 'bd-row-flex';
 
         if($atts['vertical_align']) {
-            $row_classes[] = 'bd-columns-align-' . $atts['vertical_align'];
+            $row_classes[] = 'bd-row-align-' . $atts['vertical_align'];
         }
 
         $heightStyle = ShortcodesEffects::print_all_css(
@@ -2040,10 +2045,10 @@ function themler_shortcode_columns($atts, $content = '', $tag = '') {
     <!--[<?php echo $tag; ?>]-->
         <?php echo $style_tag; ?>
         <?php echo $inner_styles; ?>
-        <div class="<?php echo implode(' ', $classes); ?> <?php echo implode(' ', $row_classes); ?>">
+        <div class="<?php echo implode(' ', $classes); ?> bd-columns">
             <div class="bd-container-inner">
                 <div class="container-fluid">
-                    <div class="row">
+                    <div class="<?php echo implode(' ', $row_classes) ?>">
                         <!--{content}-->
                             <?php echo $content; ?>
                         <!--{/content}-->
@@ -2404,7 +2409,7 @@ function themler_shortcode_slider($atts, $content = '', $tag = '') {
         'show_indicators' => 'no',
         'indicators_wide' => 'no',
         'navigator_wide' => 'no',
-        'slides_wide' => 'no',
+        'slides_wide' => 'yes',
     ), $atts, array('', 'indicators_', 'navigator_'));
 
     $vertical_items = ShortcodesUtility::getBool($atts['vertical_items']);
@@ -2928,6 +2933,17 @@ function themler_shortcode_video($atts, $content = '', $tag = '') {
             $timeStart = $secCounter;
         }
     }
+    else if (preg_match('/[&,?]t=\d+$/', $src, $partWithMsc)){
+        $secCounter = 0;
+
+        if (preg_match('/\d+/', $partWithMsc[0], $results)){
+            $secCounter = intval($results[0]);
+        };
+
+        if (!is_nan($secCounter)){
+            $timeStart = $secCounter;
+        }
+    }
     else {
         $timeStart = '';
     }
@@ -2984,7 +3000,7 @@ function themler_shortcode_video($atts, $content = '', $tag = '') {
                 <iframe <?php echo implode(' ', $iframe_atts); ?>>
                     <!--{content}--><!--{/content}-->
                 </iframe>
-            </div>' .
+            </div>
         </div>
     <!--[/<?php echo $tag; ?>]-->
 <?php

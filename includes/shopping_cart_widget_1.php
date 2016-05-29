@@ -35,12 +35,10 @@ function theme_cart() {
                 $product_view['image']  = $product->get_image();
                 ?>
                 <div class="separated-item-1 col-md-12 list">
-    <div class=" bd-griditem-1"><div class=" bd-layoutcontainer-1 bd-columns
-    
-    ">
+    <div class=" bd-griditem-1"><div class=" bd-layoutcontainer-1 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class=" bd-columnwrapper-1 
  col-md-3">
     <div class="bd-layoutcolumn-1 bd-column" ><div class="bd-vertical-align-wrapper"><a class=" bd-productimage-1" href="<?php echo $product_view['link']; ?>"><?php theme_product_image($product_view, ' bd-imagestyles', ''); ?></a></div></div>
@@ -94,22 +92,20 @@ function theme_cart() {
         </span>
 </div>
 	
-		<div class=" bd-layoutcontainer-2 bd-columns
-    
-    ">
+		<div class=" bd-layoutcontainer-2 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class=" bd-columnwrapper-4 
  col-md-3">
     <div class="bd-layoutcolumn-4 bd-column" ><div class="bd-vertical-align-wrapper"><?php global $woocommerce; ?>
-<a href="<?php echo theme_woocommerce_enabled() ? $woocommerce->cart->get_cart_url() : ''; ?>" class=" bd-button"><?php _e('View', 'woocommerce'); ?></a></div></div>
+<a href="<?php echo theme_woocommerce_enabled() ? $woocommerce->cart->get_cart_url() : ''; ?>" class=" bd-button"><?php _e('View Cart', 'woocommerce'); ?></a></div></div>
 </div>
 	
 		<div class=" bd-columnwrapper-5 
  col-md-9">
     <div class="bd-layoutcolumn-5 bd-column" ><div class="bd-vertical-align-wrapper"><?php global $woocommerce; ?>
-<a href="<?php echo $woocommerce->cart->get_checkout_url(); ?>" class=" bd-button"><?php _e('Proceed to Checkout', 'woocommerce'); ?></a></div></div>
+<a href="<?php echo $woocommerce->cart->get_checkout_url(); ?>" class=" bd-button"><?php _e('Checkout', 'woocommerce'); ?></a></div></div>
 </div>
             </div>
         </div>

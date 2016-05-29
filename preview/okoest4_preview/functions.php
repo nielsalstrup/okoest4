@@ -4,13 +4,12 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 define('THEME_NAME', "Billion Themler theme");
 global $wp_version;
 define('WP_VERSION', $wp_version);
-define('THEME_NS', 'default');
 define('THEME_LANGS_FOLDER', '/languages');
 header('X-UA-Compatible: IE=edge');
 
 remove_action('wp_head', 'wp_generator');
 
-load_theme_textdomain(THEME_NS, get_template_directory() . THEME_LANGS_FOLDER);
+load_theme_textdomain('default', get_template_directory() . THEME_LANGS_FOLDER);
 
 if (function_exists('mb_internal_encoding')) {
 	mb_internal_encoding(get_bloginfo('charset'));
@@ -74,6 +73,8 @@ function theme_manage_woocommerce_styles() {
     wp_dequeue_script( 'wc-single-product' );
 }
 add_action('wp_enqueue_scripts', 'theme_update_scripts_and_styles', 1000);
+remove_action('wp_enqueue_scripts', 'themler_add_scripts_and_styles');
+remove_action('wp_enqueue_scripts', 'theme_add_scripts_and_styles'); // old plugin version
 add_action('wp_head', 'theme_update_posts_styles', 1000);
 add_action('wp_head', 'theme_header_image_script');
 add_action('media_upload_image_header', 'wp_media_upload_handler');
@@ -113,7 +114,7 @@ if ( ! function_exists( '_wp_render_title_tag' ) ) {
             return $title;
         }
         if ( $paged >= 2 || $page >= 2 ) {
-            $title = "$title $sep " . sprintf( __( 'Page %s', THEME_NS ), max( $paged, $page ) );
+            $title = "$title $sep " . sprintf( __( 'Page %s', 'default' ), max( $paged, $page ) );
         }
         return $title;
     }
@@ -191,14 +192,22 @@ function theme_get_wc_template_path() {
     return get_stylesheet_directory() . '/' . $template_path;
 }
 
-function theme_set_wc_template_path($located, $template_name) {
+function theme_cart_totals_set_path($located, $template_name) {
     // support old WC versions
     if ($template_name === 'cart/totals.php' || $template_name === 'cart/cart-totals.php') {
         $located = theme_get_wc_template_path() . 'cart/cart-totals-wrapper.php';
     }
     return $located;
 }
-add_filter('woocommerce_locate_template', 'theme_set_wc_template_path', 10, 2);
+add_filter('woocommerce_locate_template', 'theme_cart_totals_set_path', 10, 2);
+
+function theme_shipping_calculator_set_path($located, $template_name) {
+    if ($template_name === 'cart/shipping-calculator.php') {
+        $located = theme_get_wc_template_path() . 'cart/shipping-calculator-wrapper.php';
+    }
+    return $located;
+}
+add_filter('woocommerce_locate_template', 'theme_shipping_calculator_set_path', 10, 2);
 
 function theme_add_to_cart_message($message) {
     return str_replace('button wc-forward', '', $message);
@@ -287,20 +296,29 @@ function theme_sidebars_compare($sidebar1, $sidebar2) {
 }
 uasort($wp_registered_sidebars, 'theme_sidebars_compare');
 
+if (!isset($content_width) && ($_content_width = apply_filters('theme_content_width', false))) {
+    $content_width = $_content_width;
+}
 
 function theme_register_required_plugins() {
+
+    $plugin_source = get_template_directory() . '/plugins/themler-core.zip';
+    if (!file_exists($plugin_source)) {
+        // noting to install
+        return;
+    }
 
     $plugins = array(
         array(
             'name'               => 'Themler-Core', // The plugin name.
             'slug'               => 'themler-core', // The plugin slug (typically the folder name).
-            'source'             => get_template_directory() . '/plugins/themler-core.zip', // The plugin source.
-            'required'           => false, // If false, the plugin is only 'recommended' instead of required.
-            'version'            => '', // E.g. 1.0.0. If set, the active plugin must be this version or higher. If the plugin version is higher than the plugin version installed, the user will be notified to update the plugin.
-            'force_activation'   => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
-            'force_deactivation' => false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins.
-            'external_url'       => '', // If set, overrides default API URL and points to an external URL.
-            'is_callable'        => '', // If set, this callable will be be checked for availability to determine if a plugin is active.
+            'source'             => $plugin_source, // The plugin source.
+            'required'           => false,          // If false, the plugin is only 'recommended' instead of required.
+            'version'            => '',             // E.g. 1.0.0. If set, the active plugin must be this version or higher. If the plugin version is higher than the plugin version installed, the user will be notified to update the plugin.
+            'force_activation'   => false,          // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
+            'force_deactivation' => false,          // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins.
+            'external_url'       => '',             // If set, overrides default API URL and points to an external URL.
+            'is_callable'        => '',             // If set, this callable will be be checked for availability to determine if a plugin is active.
         )
     );
 
@@ -315,6 +333,9 @@ function theme_register_required_plugins() {
         'dismiss_msg'  => '',                      // If 'dismissable' is false, this message will be output at top of nag.
         'is_automatic' => false,                   // Automatically activate plugins after installation or not.
         'message'      => '',                      // Message to output right before the plugins table.
+        'strings' => array(
+            'nag_type' => 'updated',
+        ),
     );
     tgmpa($plugins, $config);
 }
@@ -326,7 +347,7 @@ if (is_admin()) {
 	theme_include_lib('admins.php');
     theme_include_lib('export.php', 'export');
 	function theme_add_option_page() {
-		add_theme_page(__('Theme Options', THEME_NS), __('Theme Options', THEME_NS), 'edit_themes', basename(__FILE__), 'theme_print_options');
+		add_theme_page(__('Theme Options', 'default'), __('Theme Options', 'default'), 'edit_themes', basename(__FILE__), 'theme_print_options');
 	}
 
 	add_action('admin_menu', 'theme_add_option_page');
@@ -542,7 +563,7 @@ function theme_get_post_thumbnail($args = array()) {
 
 function theme_get_content($args = array()) {
     $post_id = get_queried_object_id();
-    $more_tag = theme_get_array_value($args, 'more_tag', __('Continue reading <span class="meta-nav">&rarr;</span>', THEME_NS));
+    $more_tag = theme_get_array_value($args, 'more_tag', __('Continue reading <span class="meta-nav">&rarr;</span>', 'default'));
 
     $ignore_wpautop = theme_get_meta_option($post_id, 'theme_use_wpautop') === '0';
     if ($ignore_wpautop) {
@@ -555,7 +576,7 @@ function theme_get_content($args = array()) {
         add_filter('the_content', 'wpautop');
     }
     return $content . wp_link_pages(array(
-        'before' => '<p><span class="page-navi-outer page-navi-caption"><span class="page-navi-inner">' . __('Pages', THEME_NS) . ': </span></span>',
+        'before' => '<p><span class="page-navi-outer page-navi-caption"><span class="page-navi-inner">' . __('Pages', 'default') . ': </span></span>',
         'after' => '</p>',
         'link_before' => '<span class="page-navi-outer"><span class="page-navi-inner">',
         'link_after' => '</span></span>',
@@ -628,7 +649,7 @@ function theme_create_excerpt($excerpt, $max_tokens_count, $min_remainder, $coun
 
 function theme_get_excerpt($args = array()) {
     global $post;
-    $more_tag = theme_get_array_value($args, 'more_tag', __('Continue reading <span class="meta-nav">&rarr;</span>', THEME_NS));
+    $more_tag = theme_get_array_value($args, 'more_tag', __('Continue reading <span class="meta-nav">&rarr;</span>', 'default'));
     $auto = theme_get_array_value($args, 'auto', theme_get_option('theme_metadata_excerpt_auto'));
     $all_words = theme_get_array_value($args, 'all_words', theme_get_option('theme_metadata_excerpt_words'));
     $min_remainder = theme_get_array_value($args, 'min_remainder', theme_get_option('theme_metadata_excerpt_min_remainder'));
@@ -700,8 +721,8 @@ function theme_is_home() {
 
 function theme_404_content($args = '') {
     $args = wp_parse_args($args, array(
-            'error_title' => __('Not Found', THEME_NS),
-            'error_message' => __('Apologies, but the page you requested could not be found. Perhaps searching will help.', THEME_NS)
+            'error_title' => __('Not Found', 'default'),
+            'error_message' => __('Apologies, but the page you requested could not be found. Perhaps searching will help.', 'default')
         )
     );
     extract($args);
@@ -781,7 +802,7 @@ function theme_get_adjacent_post_link($format, $link, $in_same_cat = false, $exc
 	$title = strip_tags($post->post_title);
 
 	if (empty($post->post_title))
-		$title = $previous ? __('Previous Post', THEME_NS) : __('Next Post', THEME_NS);
+		$title = $previous ? __('Previous Post', 'default') : __('Next Post', 'default');
 
 	$title = apply_filters('the_title', $title, $post->ID);
 	$short_title = $title;
@@ -813,15 +834,15 @@ function theme_comment($comment, $args, $depth) {
             <?php theme_ob_start(); ?>
             <div class="comment-author vcard">
                 <?php echo theme_get_avatar(array('id' => $comment, 'size' => 48)); ?>
-                <?php printf(__('%s <span class="says">says:</span>', THEME_NS), sprintf('<cite class="fn">%s</cite>', get_comment_author_link())); ?>
+                <?php printf(__('%s <span class="says">says:</span>', 'default'), sprintf('<cite class="fn">%s</cite>', get_comment_author_link())); ?>
             </div>
             <?php if ($comment->comment_approved == '0') : ?>
-            <em><?php _e('Your comment is awaiting moderation.', THEME_NS); ?></em>
+            <em><?php _e('Your comment is awaiting moderation.', 'default'); ?></em>
             <br />
             <?php endif; ?>
 
             <div class="comment-meta commentmetadata"><a href="<?php echo esc_url(get_comment_link($comment->comment_ID)); ?>">
-                <?php printf(__('%1$s at %2$s', THEME_NS), get_comment_date(), get_comment_time()); ?></a><?php edit_comment_link(__('(Edit)', THEME_NS), ' '); ?>
+                <?php printf(__('%1$s at %2$s', 'default'), get_comment_date(), get_comment_time()); ?></a><?php edit_comment_link(__('(Edit)', 'default'), ' '); ?>
             </div>
 
             <div class="comment-body"><?php comment_text(); ?></div>
@@ -837,7 +858,7 @@ function theme_comment($comment, $args, $depth) {
 ?>
         <li class="post pingback">
             <?php theme_ob_start(); ?>
-            <p><?php _e('Pingback:', THEME_NS); ?> <?php comment_author_link(); ?><?php edit_comment_link(__('(Edit)', THEME_NS), ' '); ?></p>
+            <p><?php _e('Pingback:', 'default'); ?> <?php comment_author_link(); ?><?php edit_comment_link(__('(Edit)', 'default'), ' '); ?></p>
 <?php
             echo '<div class="' . $comment->comment_type . '">' . theme_ob_get_clean() . '</div>';
         break;
@@ -974,9 +995,6 @@ function theme_update_scripts_and_styles() {
     if (is_singular() && get_option('thread_comments')) {
         wp_enqueue_script('comment-reply');
     }
-
-    wp_dequeue_style('themler-core-bootstrap');
-    wp_dequeue_script('themler-core-script');
 }
 
 /**
@@ -1253,9 +1271,9 @@ if (!function_exists('get_woocommerce_currencies')) {
 }
 
 function theme_get_languages() {
-    return array('en_US' => __('English', THEME_NS),
-                 'fr_FR' => __('French', THEME_NS),
-                 'de_DE' => __('German', THEME_NS)
+    return array('en_US' => __('English', 'default'),
+                 'fr_FR' => __('French', 'default'),
+                 'de_DE' => __('German', 'default')
     );
 }
 
@@ -1282,7 +1300,7 @@ function set_new_currency( $currency ) {
 }
 
 function theme_get_currency_title($textType, $showLabel, $showArrow) {
-    $label = $showLabel ? __('Currency', THEME_NS) : '';
+    $label = $showLabel ? __('Currency', 'default') : '';
     $currency = get_woocommerce_currency();
     $symbol = get_woocommerce_currency_symbol($currency);
 
@@ -1304,7 +1322,7 @@ function theme_get_currency_title($textType, $showLabel, $showArrow) {
 }
 
 function theme_get_language_title($textType, $showLabel, $showArrow) {
-    $label = $showLabel ? __('Language', THEME_NS) : '';
+    $label = $showLabel ? __('Language', 'default') : '';
     $language = get_locale();
 
     if ($textType === 'short')
@@ -1369,6 +1387,11 @@ function theme_get_page_title() {
     }
     return $title;
 }
+
+function theme_store_jquery_script() {
+    echo '<script>window.wpJQuery = window.jQuery;</script>';
+}
+add_action('wp_head', 'theme_store_jquery_script');
 
 function theme_change_cart_page_template(){
     if (is_page()){
@@ -1631,11 +1654,19 @@ function theme_social_icons_filter($content) {
 }
 add_filter('theme_body', 'theme_social_icons_filter');
 
+/**
+ * Forcibly load specified custom template for sample page.
+ * Used for preview only.
+ *
+ * @param $template
+ * @return string Specified template path
+ */
 function theme_catch_template($template) {
     if (isset($_REQUEST['custom_page'])) {
         $template_file = $_REQUEST['custom_page'];
-        if ($template_file === 'default')
+        if ($template_file === 'default') {
             $template_file = 'page.php';
+        }
         $custom_template = get_stylesheet_directory() . '/' . $template_file;
         if (file_exists($custom_template)) {
             $template = $custom_template;
@@ -1643,11 +1674,8 @@ function theme_catch_template($template) {
     }
     return $template;
 }
-
-if (theme_can_view_preview()) {
-    foreach(array('index', '404', 'archive', 'author', 'category', 'tag', 'taxonomy', 'date', 'home', 'frontpage', 'page', 'paged', 'search', 'single', 'singular') as $template) {
-        add_filter($template . '_template', 'theme_catch_template');
-    }
+if (isset($_REQUEST['custom_page']) && theme_can_view_preview()) {
+    add_filter('template_include', 'theme_catch_template', 100);
 }
 
 function theme_get_selected_template($type) {

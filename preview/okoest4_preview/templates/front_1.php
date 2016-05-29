@@ -20,13 +20,15 @@ $GLOBALS['theme_current_template_info'] = array('name' => 'home');
     window._$ = jQuery.noConflict(themeHasJQuery);
 </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--[if lte IE 9]>
+<link rel="stylesheet" type="text/css" href="<?php echo get_bloginfo('template_url', 'display') . '/layout.ie.css' ?>" />
+<script src="<?php echo get_bloginfo('template_url', 'display') . '/layout.ie.js' ?>"></script>
+<![endif]-->
+<script src="<?php echo get_bloginfo('template_url', 'display') . '/layout.core.js' ?>"></script>
 <script src="<?php echo get_bloginfo('template_url', 'display'); ?>/CloudZoom.js?ver=<?php echo wp_get_theme()->get('Version'); ?>" type="text/javascript"></script>
     
     <?php wp_head(); ?>
     
-    <!--[if lte IE 9]>
-    <link rel="stylesheet" type="text/css" href="<?php echo get_bloginfo('template_url', 'display') . '/style.ie.css?ver=' . wp_get_theme()->get('Version'); ?>" />
-    <![endif]-->
 </head>
 <?php do_action('theme_after_head'); ?>
 <?php ob_start(); // body start ?>
@@ -43,12 +45,10 @@ $GLOBALS['theme_current_template_info'] = array('name' => 'home');
  data-enable-sm
      
      class="data-control-id-1365017 bd-affix-1"><header class="data-control-id-936270 bd-headerarea-1 ">
-        <div class="data-control-id-1364682 bd-layoutcontainer-3 bd-columns
-    
-    ">
+        <div class="data-control-id-1364682 bd-layoutcontainer-3 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class="data-control-id-1432564 bd-columnwrapper-6 
  col-lg-1
  col-md-1">
@@ -246,7 +246,7 @@ $GLOBALS['theme_current_template_info'] = array('name' => 'home');
 	
 		<div class="bd-containereffect-2 container data-control-id-1364986">
 <div class="data-control-id-1243536 bd-stretchtobottom-1 bd-stretch-to-bottom" data-control-selector=".bd-contentlayout-1">
-<div class="bd-contentlayout-1   bd-sheetstyles data-control-id-306">
+<div class="bd-contentlayout-1   bd-sheetstyles data-control-id-306" >
     <div class="bd-container-inner">
 
         
@@ -260,7 +260,7 @@ $GLOBALS['theme_current_template_info'] = array('name' => 'home');
  <?php theme_sidebar_area_2(); ?>
 
                     <div class="data-control-id-1118898 bd-layoutitemsbox-15 bd-flex-wide">
-    <div class="bd-contentlayout-11 bd-sheetstyles data-control-id-1510173">
+    <div class="bd-contentlayout-11 bd-sheetstyles data-control-id-1510173" >
     <div class="bd-container-inner">
 
         
@@ -298,12 +298,10 @@ $GLOBALS['theme_current_template_info'] = array('name' => 'home');
     <?php if (theme_get_option('theme_override_default_footer_content')): ?>
         <?php echo do_shortcode(theme_get_option('theme_footer_content')); ?>
     <?php else: ?>
-        <div class="data-control-id-2772 bd-layoutcontainer-28 bd-columns
-    
-    ">
+        <div class="data-control-id-2772 bd-layoutcontainer-28 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class="data-control-id-2764 bd-columnwrapper-62 
  col-sm-3">
     <div class="bd-layoutcolumn-62 bd-column" ><div class="bd-vertical-align-wrapper"><?php
@@ -375,7 +373,7 @@ $GLOBALS['theme_current_template_info'] = array('name' => 'home');
 </a></div>
 <div id="wp-footer">
     <?php wp_footer(); ?>
-    <!-- <?php printf(__('%d queries. %s seconds.', THEME_NS), get_num_queries(), timer_stop(0, 3)); ?> -->
+    <!-- <?php printf(__('%d queries. %s seconds.', 'default'), get_num_queries(), timer_stop(0, 3)); ?> -->
 </div>
 </body>
 <?php echo apply_filters('theme_body', ob_get_clean()); // body end ?>

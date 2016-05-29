@@ -35,12 +35,10 @@ function theme_cart() {
                 $product_view['image']  = $product->get_image();
                 ?>
                 <div class="separated-item-1 col-md-12 list">
-    <div class="data-control-id-139 bd-griditem-1"><div class="data-control-id-128 bd-layoutcontainer-1 bd-columns
-    
-    ">
+    <div class="data-control-id-139 bd-griditem-1"><div class="data-control-id-128 bd-layoutcontainer-1 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class="data-control-id-122 bd-columnwrapper-1 
  col-md-3">
     <div class="bd-layoutcolumn-1 bd-column" ><div class="bd-vertical-align-wrapper"><a class="data-control-id-67 bd-productimage-1" href="<?php echo $product_view['link']; ?>"><?php theme_product_image($product_view, 'data-control-id-66 bd-imagestyles', ''); ?></a></div></div>
@@ -94,22 +92,20 @@ function theme_cart() {
         </span>
 </div>
 	
-		<div class="data-control-id-198 bd-layoutcontainer-2 bd-columns
-    
-    ">
+		<div class="data-control-id-198 bd-layoutcontainer-2 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class="data-control-id-194 bd-columnwrapper-4 
  col-md-3">
     <div class="bd-layoutcolumn-4 bd-column" ><div class="bd-vertical-align-wrapper"><?php global $woocommerce; ?>
-<a href="<?php echo theme_woocommerce_enabled() ? $woocommerce->cart->get_cart_url() : ''; ?>" class="data-control-id-186 bd-button"><?php _e('View', 'woocommerce'); ?></a></div></div>
+<a href="<?php echo theme_woocommerce_enabled() ? $woocommerce->cart->get_cart_url() : ''; ?>" class="data-control-id-186 bd-button"><?php _e('View Cart', 'woocommerce'); ?></a></div></div>
 </div>
 	
 		<div class="data-control-id-196 bd-columnwrapper-5 
  col-md-9">
     <div class="bd-layoutcolumn-5 bd-column" ><div class="bd-vertical-align-wrapper"><?php global $woocommerce; ?>
-<a href="<?php echo $woocommerce->cart->get_checkout_url(); ?>" class="data-control-id-191 bd-button"><?php _e('Proceed to Checkout', 'woocommerce'); ?></a></div></div>
+<a href="<?php echo $woocommerce->cart->get_checkout_url(); ?>" class="data-control-id-191 bd-button"><?php _e('Checkout', 'woocommerce'); ?></a></div></div>
 </div>
             </div>
         </div>

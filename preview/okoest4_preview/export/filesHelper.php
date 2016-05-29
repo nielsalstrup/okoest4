@@ -1,7 +1,10 @@
 <?php
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
-class FilesHelper{
+$base_template_dir = get_template_directory();
+load_template($base_template_dir . '/export/ProviderLog.php');
+
+class FilesHelper {
 
     public static function find_files($pattern, $flags = 0) {
         $files = glob($pattern, $flags);
@@ -144,6 +147,13 @@ class FilesHelper{
             throw new PermissionDeniedException($dir);
     }
 
+    /**
+     * Remove directory recursively
+     *
+     * @param $dir
+     * @param bool|false $hard - remove directory itself
+     * @throws PermissionDeniedException
+     */
     public static function empty_dir($dir, $hard = false) {
         if (!file_exists($dir) || !is_dir($dir))
             return;
@@ -155,41 +165,55 @@ class FilesHelper{
                 $path = $dir . '/' . $object;
                 if (strtolower(filetype($path)) == 'dir') {
                     FilesHelper::empty_dir($path, true);
-                } else {
-                    if (false === @unlink($path))
-                        throw new PermissionDeniedException($path);
+                } else if (false === @unlink($path)) {
+                    throw new PermissionDeniedException("Can't unlink $path");
                 }
             }
         }
         reset($objects);
-        if ($hard && false === @rmdir($dir))
-            throw new PermissionDeniedException($dir);
+        if ($hard && false === @rmdir($dir)) {
+            ProviderLog::errorHandler(E_USER_ERROR, "Can't rmdir $dir" . (isset($php_errormsg) ? ", $php_errormsg" : ""), __FILE__, __LINE__);
+        }
     }
 
+    /**
+     * Remove empty subdirectories recursively in provided path
+     *
+     * @param $path
+     * @return bool
+     */
     public static function remove_empty_subfolders($path) {
-        $empty=true;
-        foreach (glob($path.DIRECTORY_SEPARATOR."*") as $file)
-        {
+        $empty = true;
+        $files = glob($path . DIRECTORY_SEPARATOR . "*");
+        foreach ($files as $file) {
             $empty &= is_dir($file) && FilesHelper::remove_empty_subfolders($file);
         }
 
-        if ($empty) {
-            if (false === @rmdir($path))
-                throw new PermissionDeniedException($path);
+        if ($empty && false === @rmdir($path)) {
+            ProviderLog::errorHandler(E_USER_ERROR, "Can't rmdir $path" . (isset($php_errormsg) ? ", $php_errormsg" : ""), __FILE__, __LINE__);
         }
-
         return $empty;
     }
 
+    /**
+     * Normalize given path
+     *
+     * Example:
+     * /home/a/../b/c
+     * /home/b/c
+     *
+     * @param $path
+     * @return string
+     */
     public static function normalize_path($path) {
-        $root = ($path[0] === '/') ? '/' : '';
+        $root = $path[0] === '/' ? '/' : '';
         $segments = preg_split('/[\\/\\\\]/', trim($path, '/'));
         $ret = array();
         foreach ($segments as $segment) {
-            if (($segment == '.') || empty($segment)) {
+            if ($segment === '.' || $segment === '') {
                 continue;
             }
-            if ($segment == '..') {
+            if ($segment === '..') {
                 array_pop($ret);
             } else {
                 array_push($ret, $segment);
@@ -198,6 +222,13 @@ class FilesHelper{
         return $root . implode('/', $ret);
     }
 
+    /**
+     * Check if provided directory readable and writable
+     *
+     * @param $path
+     * @return bool
+     * @throws PermissionDeniedException
+     */
     public static function test_permission($path) {
         if (!is_dir($path))
             $path = dirname($path);
@@ -212,8 +243,14 @@ class FilesHelper{
 }
 
 class PermissionDeniedException extends Exception {
+
     public function getExtendedMessage() {
-        return '<p>' . parent::getMessage() . '</p><h2>Insufficient permissions.</h2><p>'
+        $msg = parent::getMessage();
+        $last_error = error_get_last();
+        if ($last_error) {
+            $msg = $last_error['message'] . ' in ' . $last_error['file'] . ' on line ' . $last_error['line'] . "<br>$msg";
+        }
+        return '<p>' . $msg . '</p><h2>Insufficient permissions.</h2><p>'
             . 'The theme cannot be edited. Please make sure that the user and group running web server is granted the appropriate read, write and execute(linux only) permissions on the following folders. As well as read and write permission on the files in these folders:</p>'
             . '{folders}'
             . '<p>How to do this for MacOS and Linux systems:</p>'
@@ -230,10 +267,10 @@ class PermissionDeniedException extends Exception {
             . '<p><b>Note</b>: It is general approach. We would recommend that you ask your hosting administrator to grant access permissions for listed folders and files.</p><br>'
             . '<!--' . $this->getTraceAsString() . '-->';
     }
-};
+}
 
 class UnzipException extends Exception {
     public function getExtendedMessage() {
         return 'unzip error: ' . parent::getMessage() . '<!--' . $this->getTraceAsString() . '-->';
     }
-};
+}

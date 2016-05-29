@@ -1,5 +1,5 @@
 <?php
-theme_register_sidebar('Area-4',  __('WP Top Right Widget Widget Area', THEME_NS));
+theme_register_sidebar('Area-4',  __('WP Top Right Widget Widget Area', 'default'));
 
 function theme_block_11_16($title = '', $content = '', $class = '', $id = ''){
     ob_start();

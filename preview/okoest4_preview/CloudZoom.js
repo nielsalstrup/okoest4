@@ -247,8 +247,12 @@
                 // fix zoom-big position
                 var bodyWidth = $('body').width();
                 var zOffset = zoomDiv.offset();
+                var sImgOffset = sImg.offset();
                 if (zOffset && zOffset.left) {
-                    if (zOffset.left + zoomDiv.outerWidth() > bodyWidth) {
+                    var leftSpace = sImgOffset.left,
+                        rightSpace = bodyWidth - zOffset.left;
+
+                    if (rightSpace < leftSpace) {
                         var zLeft = zoomDiv.css('left');
                         zoomDiv.css({'left': 'auto', 'right': zLeft});
                     } else if (zOffset.left < 0) {

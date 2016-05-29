@@ -139,10 +139,17 @@ var DataProvider = {};
         DataProviderHelper.chunkedRequest(createChunkedRequest('theme_save_project', saveData), callback);
     };
 
+    DataProvider.prepareThemeToGet = function prepareThemeToGet(data, callback) {
+        doRequest($.extend({action: 'theme_prepare_theme_to_get'}, data), callback);
+    };
+
     DataProvider.getTheme = function getTheme(data, callback) {
         var url = getAjaxUrl('theme_get_zip');
-        data.uid = templateInfo.user;
-        data._ajax_nonce = templateInfo.nonce;
+        data = $.extend({
+            uid: templateInfo.user,
+            _ajax_nonce: templateInfo.nonce
+        }, data);
+
         $.each(data, function(key, value) {
             url = addQueryArg(url, key, value);
         });
@@ -274,12 +281,19 @@ var DataProvider = {};
             themes: $.extend({}, templateInfo.themes),
             pathToManifest : '/export/themler.manifest',
             contentEditorPluginVersion: templateInfo.plugin_version,
+            includeEditorSupport: true,
+            includeContentSupport: true,
             activePlugins: templateInfo.active_plugins
         };
 
         if (templateInfo.importer_nonce) {
+            // content from Artisteer
             info.importContent = getAjaxUrl('theme_content_start_import_without_cleanup') + '&uid=' + templateInfo.user + '&_ajax_nonce=' + templateInfo.importer_nonce;
             info.replaceContent = getAjaxUrl('theme_content_start_import') + '&uid=' + templateInfo.user + '&_ajax_nonce=' + templateInfo.importer_nonce;
+        } else if (templateInfo.ask_import_content && getQueryArg(window.location.href, 'ask_import_content')) {
+            // content from Themler
+            info.importContent = getAjaxUrl('theme_import_content') + '&uid=' + templateInfo.user + '&_ajax_nonce=' + templateInfo.nonce;
+            info.replaceContent = info.importContent + '&removePrev=1';
         }
         return info;
     };

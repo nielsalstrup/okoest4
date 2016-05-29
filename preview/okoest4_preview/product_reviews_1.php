@@ -8,12 +8,10 @@
             <li itemprop="reviews" itemscope itemtype="http://schema.org/Review" <?php comment_class(); ?> id="li-comment-<?php comment_ID() ?>">
                 <div  id="comment-<?php comment_ID(); ?>" class="comment_container data-control-id-3185 bd-productreview-1">
                     <div class="comment-text">
-                        <div class="data-control-id-3100 bd-layoutcontainer-30 bd-columns
-    
-    ">
+                        <div class="data-control-id-3100 bd-layoutcontainer-30 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class="data-control-id-3096 bd-columnwrapper-68 
  col-md-1">
     <div class="bd-layoutcolumn-68 bd-column" ><div class="bd-vertical-align-wrapper"><div class="data-control-id-3094 bd-reviewavatar-1"><?php echo theme_get_avatar(array('class' => 'data-control-id-3086 bd-imagestyles', 'attributes' => ''), true); ?></div></div></div>

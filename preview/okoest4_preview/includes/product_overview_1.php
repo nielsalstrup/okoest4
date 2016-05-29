@@ -24,12 +24,10 @@ function theme_product_overview() {
             $product_view['desc']  = $post->post_excerpt;
             $product_view['image'] = woocommerce_get_product_thumbnail('shop_catalog', '', '');
 ?>
-            <div class="data-control-id-3074 bd-layoutcontainer-29 bd-columns
-    
-    ">
+            <div class="data-control-id-3074 bd-layoutcontainer-29 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class="data-control-id-3070 bd-columnwrapper-66 
  col-md-6
  col-sm-12
@@ -230,15 +228,13 @@ if (get_option('woocommerce_enable_review_rating' ) !== 'no') {
 </div>
 	
 		<?php
-    $tabs = apply_filters( 'woocommerce_product_tabs', array() );
+    $tabs = apply_filters('woocommerce_product_tabs', array());
 
     if (is_null($tabs)) {
         $tabs = array('reviews' => array());
     }
-    foreach(array('description', 'additional_information', 'reviews') as $tab) {
-        if (!array_key_exists($tab, $tabs))
-            continue;
-        $tabs[$tab]['callback'] = 'theme_tab_' . $tab . '_2';
+    if (isset($tabs['reviews'])) {
+        $tabs['reviews']['callback'] = 'theme_tab_reviews_2';
     }
 
     if ( ! empty( $tabs ) ) :

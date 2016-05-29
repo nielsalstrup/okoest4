@@ -7,7 +7,7 @@ add_action('body_class', 'theme_body_class', 1000);
 add_filter('single_template', 'theme_post_template' );
 
 function theme_admin_init(){
-    add_meta_box('theme_select_post_template', __('Post Template', THEME_NS), 'theme_select_post_template', 'post', 'side', 'default');
+    add_meta_box('theme_select_post_template', __('Post Template', 'default'), 'theme_select_post_template', 'post', 'side', 'default');
 }
 
 function theme_select_post_template( $post )
@@ -19,9 +19,9 @@ function theme_select_post_template( $post )
         $template = 'single.php';
     // Render the template
 ?>
-    <label class="screen-reader-text" for="theme_post_template"><?php _e('Post Template', THEME_NS) ?></label>
+    <label class="screen-reader-text" for="theme_post_template"><?php _e('Post Template', 'default') ?></label>
     <select name="theme_post_template" id="theme_post_template">
-        <option value='default'><?php _e('Default Template'); ?></option>
+        <option value='default'><?php _e('Default Template', 'default'); ?></option>
         <?php page_template_dropdown($template); ?>
     </select>
 

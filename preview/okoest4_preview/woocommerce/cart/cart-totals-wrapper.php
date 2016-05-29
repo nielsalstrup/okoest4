@@ -1,10 +1,10 @@
 <?php
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
-remove_filter('woocommerce_locate_template', 'theme_set_wc_template_path');
+remove_filter('woocommerce_locate_template', 'theme_cart_totals_set_path');
 ob_start();
 woocommerce_cart_totals();
-add_filter('woocommerce_locate_template', 'theme_set_wc_template_path', 10, 2);
+add_filter('woocommerce_locate_template', 'theme_cart_totals_set_path', 10, 2);
 $table = str_replace(
     array(
         'class="cart_totals',

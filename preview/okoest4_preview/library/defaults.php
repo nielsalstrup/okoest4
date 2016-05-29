@@ -45,9 +45,9 @@ $theme_default_options = array(
     'theme_morelink_template' => '<a class="more-link" href="[url]">[text]</a>',
 
 	'theme_show_tags_on_404_page' => 0,
-	'theme_show_tags_title_on_404_page' => __('Tag Cloud', THEME_NS),
+	'theme_show_tags_title_on_404_page' => __('Tag Cloud', 'default'),
 	'theme_show_random_posts_on_404_page' => 0,
-	'theme_show_random_posts_title_on_404_page' => __('Random posts', THEME_NS),
+	'theme_show_random_posts_title_on_404_page' => __('Random posts', 'default'),
 	'theme_comment_use_smilies' => 0,
 	'theme_allow_comments' => 1,
 

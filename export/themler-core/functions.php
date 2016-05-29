@@ -12,25 +12,58 @@ function is_themler_action() {
     return strpos($_REQUEST['action'], 'theme_') === 0;
 }
 
-function themler_theme_inactive_notice() {
-    if (current_user_can('activate_plugins')) {
-        if (!defined('THEME_NAME') || THEME_NAME !== "Billion Themler theme") {
-?>
-            <div class="error">
-                <p><?php printf(__('<strong>Themler theme is inactive.</strong> Themler Core plugin\'s functionality is restricted.'), '<a href="http://wordpress.org/extend/plugins/woocommerce/">'); ?></p>
-            </div>
-<?php
-        }
-    }
-}
-add_action('admin_notices', 'themler_theme_inactive_notice');
+function themler_add_scripts_and_styles() {
 
-function theme_add_scripts_and_styles() {
     $bootstrap_ext = file_exists(THEMLER_PLUGIN_PATH . 'shortcodes/assets/css/bootstrap.min.css') ? '.min.css' : '.css';
     wp_register_style("themler-core-bootstrap", THEMLER_PLUGIN_URL . 'shortcodes/assets/css/bootstrap' . $bootstrap_ext, array(), THEMLER_PLUGIN_VERSION);
     wp_enqueue_style("themler-core-bootstrap");
 
+    $style_ext = file_exists(THEMLER_PLUGIN_PATH . 'shortcodes/assets/css/style.min.css') ? '.min.css' : '.css';
+    wp_register_style("themler-core-style", THEMLER_PLUGIN_URL . 'shortcodes/assets/css/style' . $style_ext, array(), THEMLER_PLUGIN_VERSION);
+    wp_enqueue_style("themler-core-style");
+
+    wp_register_style("themler-core-layout-ie", THEMLER_PLUGIN_URL . 'shortcodes/assets/css/layout.ie.css', array(), THEMLER_PLUGIN_VERSION);
+    wp_enqueue_style("themler-core-layout-ie");
+    if (function_exists('wp_style_add_data')) wp_style_add_data("themler-core-layout-ie", 'conditional', 'lte IE 9');
+
+    wp_register_script("themler-core-jquery-fix", THEMLER_PLUGIN_URL . 'shortcodes/assets/js/jquery.js', array('jquery'), THEMLER_PLUGIN_VERSION);
+    wp_enqueue_script("themler-core-jquery-fix");
+
+    wp_register_script("themler-core-bootstrap", THEMLER_PLUGIN_URL . 'shortcodes/assets/js/bootstrap.min.js', array('jquery'), THEMLER_PLUGIN_VERSION);
+    wp_enqueue_script("themler-core-bootstrap");
+
     wp_register_script("themler-core-script", THEMLER_PLUGIN_URL . 'shortcodes/assets/js/script.js', array('jquery'), THEMLER_PLUGIN_VERSION);
     wp_enqueue_script("themler-core-script");
+
+    wp_register_script("themler-core-layout-core", THEMLER_PLUGIN_URL . 'shortcodes/assets/js/layout.core.js', array('jquery'), THEMLER_PLUGIN_VERSION);
+    wp_enqueue_script("themler-core-layout-core");
+
+    wp_register_script("themler-core-layout-ie", THEMLER_PLUGIN_URL . 'shortcodes/assets/js/layout.ie.js', array('jquery'), THEMLER_PLUGIN_VERSION);
+    wp_enqueue_script("themler-core-layout-ie");
+    if (function_exists('wp_script_add_data')) wp_script_add_data("themler-core-layout-ie", 'conditional', 'lte IE 9');
 }
-add_action('wp_enqueue_scripts', 'theme_add_scripts_and_styles');
+add_action('wp_enqueue_scripts', 'themler_add_scripts_and_styles');
+
+
+function themler_edit_form_buttons($post) {
+    ob_start();
+    do_action('themler_edit_form_buttons', $post);
+    $html = ob_get_clean();
+
+    if ($html) {
+?>
+        <div style="margin-top: 5px; margin-bottom: 10px;">
+            <?php echo $html; ?>
+        </div>
+<?php
+    }
+}
+add_action('edit_form_after_title', 'themler_edit_form_buttons');
+
+
+function _at(&$arr, $key, $default = false) {
+    if (isset($arr[$key])) {
+        return $arr[$key];
+    }
+    return $default;
+}

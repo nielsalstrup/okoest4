@@ -20,13 +20,15 @@ $GLOBALS['theme_current_template_info'] = array('name' => 'event');
     window._$ = jQuery.noConflict(themeHasJQuery);
 </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--[if lte IE 9]>
+<link rel="stylesheet" type="text/css" href="<?php echo get_bloginfo('template_url', 'display') . '/layout.ie.css' ?>" />
+<script src="<?php echo get_bloginfo('template_url', 'display') . '/layout.ie.js' ?>"></script>
+<![endif]-->
+<script src="<?php echo get_bloginfo('template_url', 'display') . '/layout.core.js' ?>"></script>
 <script src="<?php echo get_bloginfo('template_url', 'display'); ?>/CloudZoom.js?ver=<?php echo wp_get_theme()->get('Version'); ?>" type="text/javascript"></script>
     
     <?php wp_head(); ?>
     
-    <!--[if lte IE 9]>
-    <link rel="stylesheet" type="text/css" href="<?php echo get_bloginfo('template_url', 'display') . '/style.ie.css?ver=' . wp_get_theme()->get('Version'); ?>" />
-    <![endif]-->
 </head>
 <?php do_action('theme_after_head'); ?>
 <?php ob_start(); // body start ?>
@@ -43,12 +45,10 @@ $GLOBALS['theme_current_template_info'] = array('name' => 'event');
  data-enable-sm
      
      class=" bd-affix-1"><header class=" bd-headerarea-1 ">
-        <div class=" bd-layoutcontainer-3 bd-columns
-    
-    ">
+        <div class=" bd-layoutcontainer-3 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class=" bd-columnwrapper-6 
  col-lg-1
  col-md-1">
@@ -234,7 +234,7 @@ $GLOBALS['theme_current_template_info'] = array('name' => 'event');
 	
 		<div class="bd-containereffect-9 container "><div class=" bd-spacer-6  clearfix"></div></div>
 	
-		<div class="bd-contentlayout-15 bd-sheetstyles ">
+		<div class="bd-contentlayout-15 bd-sheetstyles " >
     <div class="bd-container-inner">
 
         
@@ -270,12 +270,10 @@ $GLOBALS['theme_current_template_info'] = array('name' => 'event');
     <?php if (theme_get_option('theme_override_default_footer_content')): ?>
         <?php echo do_shortcode(theme_get_option('theme_footer_content')); ?>
     <?php else: ?>
-        <div class=" bd-layoutcontainer-28 bd-columns
-    
-    ">
+        <div class=" bd-layoutcontainer-28 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class=" bd-columnwrapper-62 
  col-sm-3">
     <div class="bd-layoutcolumn-62 bd-column" ><div class="bd-vertical-align-wrapper"><?php
@@ -343,7 +341,7 @@ $GLOBALS['theme_current_template_info'] = array('name' => 'event');
 </footer>
 <div id="wp-footer">
     <?php wp_footer(); ?>
-    <!-- <?php printf(__('%d queries. %s seconds.', THEME_NS), get_num_queries(), timer_stop(0, 3)); ?> -->
+    <!-- <?php printf(__('%d queries. %s seconds.', 'default'), get_num_queries(), timer_stop(0, 3)); ?> -->
 </div>
 </body>
 <?php echo apply_filters('theme_body', ob_get_clean()); // body end ?>

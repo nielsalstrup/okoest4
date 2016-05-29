@@ -19,7 +19,7 @@ function theme_block_footer_15_13($title = '', $content = '', $class = '', $id =
 }
 ?>
 <?php
-theme_register_sidebar('Area-1',  __('Sponsor Widget Area', THEME_NS));
+theme_register_sidebar('Area-1',  __('Sponsor Widget Area', 'default'));
 
 function theme_block_10_13($title = '', $content = '', $class = '', $id = ''){
     ob_start();

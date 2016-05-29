@@ -16,12 +16,10 @@ if (!function_exists('theme_comment_3')){
 <li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>">
 	<div id="comment-<?php comment_ID() ?>">
     <div class="data-control-id-1691 bd-comment-3 <?php echo $comment->comment_type ?>">
-        <div class="data-control-id-1577 bd-layoutcontainer-19 bd-columns
-    
-    ">
+        <div class="data-control-id-1577 bd-layoutcontainer-19 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class="data-control-id-1573 bd-columnwrapper-42 
  col-md-1">
     <div class="bd-layoutcolumn-42 bd-column" ><div class="bd-vertical-align-wrapper"><div class="data-control-id-1565 bd-commentavatar-3">
@@ -34,13 +32,13 @@ if (!function_exists('theme_comment_3')){
     <div class="bd-layoutcolumn-43 bd-column" ><div class="bd-vertical-align-wrapper"><div class="data-control-id-1556 bd-commentmetadata-3 comment-meta commentmetadata">
     <strong><?php echo get_comment_author_link($comment->comment_ID); ?></strong>
     <div>
-        <a href="<?php echo esc_url(get_comment_link($comment->comment_ID)); ?>"><?php printf(__('%1$s at %2$s', THEME_NS), get_comment_date(), get_comment_time()); ?></a>
-        <?php edit_comment_link(__('(Edit)', THEME_NS)); ?>
+        <a href="<?php echo esc_url(get_comment_link($comment->comment_ID)); ?>"><?php printf(__('%1$s at %2$s', 'default'), get_comment_date(), get_comment_time()); ?></a>
+        <?php edit_comment_link(__('(Edit)', 'default')); ?>
     </div>
 </div>
 	
 		<div class="data-control-id-1566 bd-commenttext-3 comment-body">
-    <?php if ($comment->comment_approved == '0') : ?><em><?php _e('Your comment is awaiting moderation.', THEME_NS); ?></em><br /><?php endif; ?>
+    <?php if ($comment->comment_approved == '0') : ?><em><?php _e('Your comment is awaiting moderation.', 'default'); ?></em><br /><?php endif; ?>
     <?php comment_text(); ?>
 </div>
 	
@@ -69,7 +67,7 @@ if (!function_exists('theme_comment_reply_link_filter_3')) {
 			case 'pingback' :
 			case 'trackback' : ?>
 <li class="post <?php echo $comment->comment_type ?>">
-	<?php _e('Pingback:', THEME_NS); ?> <?php comment_author_link(); ?><?php edit_comment_link(__('(Edit)', THEME_NS), ' ');
+	<?php _e('Pingback:', 'default'); ?> <?php comment_author_link(); ?><?php edit_comment_link(__('(Edit)', 'default'), ' ');
 			break;
 		}
 	}
@@ -79,13 +77,13 @@ if (!function_exists('theme_comment_reply_link_filter_3')) {
 	<div class="bd-container-inner">
 	<?php if (post_password_required()) { ?>
 		<div class="data-control-id-1689 bd-container-21 bd-tagstyles nocomments">
-		<h2><?php _e('This post is password protected. Enter the password to view any comments.', THEME_NS) ?></h2>
+		<h2><?php _e('This post is password protected. Enter the password to view any comments.', 'default') ?></h2>
 		</div><?php
 	} else {
 		if (have_comments()) { ?>
 			<div class="data-control-id-1689 bd-container-21 bd-tagstyles comments">
 				<h2><?php printf(
-						_n('One Response to %2$s', '%1$s Responses to %2$s', get_comments_number(), THEME_NS),
+						_n('One Response to %2$s', '%1$s Responses to %2$s', get_comments_number(), 'default'),
 						number_format_i18n(get_comments_number()),
 						get_the_title()
 					); ?></h2>
@@ -103,7 +101,7 @@ if (!function_exists('theme_comment_reply_link_filter_3')) {
                 $defaults[$key] = str_replace('</p>', '</label>', $defaults[$key]);
             }
             $defaults['comment_notes_after'] = '<p class="form-allowed-tags">'
-                . sprintf('<label class="data-control-id-190480 bd-bootstraplabel">' . __('<strong>XHTML:</strong> You can use these tags: <code>%s</code>') . '</label>', allowed_tags())
+                . sprintf('<label class="data-control-id-190480 bd-bootstraplabel">' . __('<strong>XHTML:</strong> You can use these tags: <code>%s</code>', 'default') . '</label>', allowed_tags())
                 . '</p>';
             return $defaults;
         }

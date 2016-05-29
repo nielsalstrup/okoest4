@@ -48,12 +48,10 @@ function theme_products() {
         ?>
                 <div class=" bd-productsgridbar-35">
     <div class="bd-container-inner">
-        <div class=" bd-layoutcontainer-27 bd-columns
-    
-    ">
+        <div class=" bd-layoutcontainer-27 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class=" bd-columnwrapper-60 
  col-md-6
  col-sm-6
@@ -206,12 +204,10 @@ function theme_products() {
                                     <?php theme_do_action('woocommerce_before_shop_loop_item', array(
                                         array('woocommerce_template_loop_product_link_open', 10) // 2.1.0
                                     )); ?>
-                                    <div class=" bd-layoutcontainer-26 bd-columns
-    
-    ">
+                                    <div class=" bd-layoutcontainer-26 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class=" bd-columnwrapper-57 
  col-md-3">
     <div class="bd-layoutcolumn-57 bd-column" ><div class="bd-vertical-align-wrapper"><a class=" bd-productimage-5" href="<?php echo $product_view['link']; ?>"><?php theme_product_image($product_view, ' bd-imagestyles', ''); ?></a>

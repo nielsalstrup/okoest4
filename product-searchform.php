@@ -7,11 +7,11 @@
             
             
             <div class="bd-input-wrapper">
-                <input name="s" type="text" class=" bd-bootstrapinput-2 form-control" value="<?php echo esc_attr(get_search_query()); ?>" placeholder="<?php _e('Search'); ?>">
+                <input name="s" type="text" class=" bd-bootstrapinput-2 form-control" value="<?php echo esc_attr(get_search_query()); ?>" placeholder="<?php _e('Search', 'default'); ?>">
             </div>
             
             <div class="bd-button-wrapper">
-                <input type="submit" class=" bd-button" value="<?php _e('Search'); ?>">
+                <input type="submit" class=" bd-button" value="<?php _e('Search', 'default'); ?>">
             </div>
         </div>
     </div>

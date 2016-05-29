@@ -7,7 +7,7 @@ function theme_logo_2(){
     $logoLink = theme_get_option('theme_logo_link');
 ?>
 
-<a class="data-control-id-1422676 bd-logo-2 hidden-xs" href="<?php
+<a class="data-control-id-1422676 bd-logo-2 hidden-sm hidden-xs" href="<?php
     if (!theme_is_empty_html($logoLink)) {
         echo $logoLink;
     } else {

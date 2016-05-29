@@ -4,34 +4,34 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 global $theme_sidebars;
 $theme_sidebars = array(
 	'default' => array(
-		'name' => __('Primary Widget Area', THEME_NS),
+		'name' => __('Primary Widget Area', 'default'),
 		'id' => 'primary-widget-area',
-		'description' => __("This is the default sidebar. If no widgets are active, the default theme widgets will be displayed instead.", THEME_NS)
+		'description' => __("This is the default sidebar. If no widgets are active, the default theme widgets will be displayed instead.", 'default')
 	),
     'secondary' => array(
-        'name' => __('Secondary Widget Area', THEME_NS),
+        'name' => __('Secondary Widget Area', 'default'),
         'id' => 'secondary-widget-area',
-        'description' => __("This is the secondary sidebar. If no widgets are active, the default theme widgets will be displayed instead.", THEME_NS)
+        'description' => __("This is the secondary sidebar. If no widgets are active, the default theme widgets will be displayed instead.", 'default')
     ),
     'footer1' => array(
-        'name' => __('First Footer Widget Area', THEME_NS),
+        'name' => __('First Footer Widget Area', 'default'),
         'id' => 'footer1-widget-area',
-        'description' => __("The first footer widget area. You can add a text widget for custom footer text.", THEME_NS)
+        'description' => __("The first footer widget area. You can add a text widget for custom footer text.", 'default')
     ),
     'footer2' => array(
-        'name' => __('Second Footer Widget Area', THEME_NS),
+        'name' => __('Second Footer Widget Area', 'default'),
         'id' => 'footer2-widget-area',
-        'description' => __("The second footer widget area.", THEME_NS)
+        'description' => __("The second footer widget area.", 'default')
     ),
     'footer3' => array(
-        'name' => __('Third Footer Widget Area', THEME_NS),
+        'name' => __('Third Footer Widget Area', 'default'),
         'id' => 'footer3-widget-area',
-        'description' => __("The third footer widget area.", THEME_NS)
+        'description' => __("The third footer widget area.", 'default')
     ),
     'footer4' => array(
-        'name' => __('Fourth Footer Widget Area', THEME_NS),
+        'name' => __('Fourth Footer Widget Area', 'default'),
         'id' => 'footer4-widget-area',
-        'description' => __("The fourth footer widget area.", THEME_NS)
+        'description' => __("The fourth footer widget area.", 'default')
     )
 );
 

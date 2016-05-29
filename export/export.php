@@ -19,26 +19,51 @@ function theme_add_billion_menu() {
     $menu_slug = theme_get_editor_link();
     $capability = 'edit_themes';
     $menu['58.91'] = array( '', $capability, 'separator-billion', '', 'wp-menu-separator billion' );
-    $menu['58.95'] = array( __('Themler', THEME_NS), $capability, $menu_slug, '', 'menu-top menu-icon-billion', 'menu-billion', 'div' );
+    $menu['58.95'] = array( __('Themler', 'default'), $capability, $menu_slug, '', 'menu-top menu-icon-billion', 'menu-billion', 'div' );
 }
 add_action('_network_admin_menu', 'theme_add_billion_menu');
 add_action('_user_admin_menu', 'theme_add_billion_menu');
 add_action('_admin_menu', 'theme_add_billion_menu');
 
 function theme_fix_customize_link() {
-    ?>
+?>
     <script>
         jQuery(window).load(function() {
-            var btn = jQuery('a[href$=run-themler')
-                .attr('href', '<?php echo theme_get_editor_link(); ?>');
+            var href = '<?php echo theme_get_editor_link(); ?>';
+            var caption = '<?php _e('Edit in Themler', 'default'); ?>';
+
+            var btn = jQuery('.theme-actions > a[href$=run-themler]')
+                .attr('href', href);
+
+            if (btn.length === 0) {
+                return;
+            }
+
+            // Add button to active theme
             var clone = btn.clone()
                 .removeClass('load-customize')
-                .html('<?php _e('Edit in Themler', THEME_NS); ?>')
+                .html(caption)
                 .insertAfter(btn);
             btn.css('display', 'none');
+
+            // Modify single theme template to add the button
+            var tpl = jQuery("#tmpl-theme-single").html();
+            var re = new RegExp('(<div class="active-theme">)(([\n\t]*(<#|<a).*[\n\t]*)*)(</div>)', "mi");
+            tpl = tpl.replace(re, "$1" + clone[0].outerHTML + "$2$5");
+            jQuery("#tmpl-theme-single").html(tpl);
+
+            // Modify button in already opened window
+            jQuery('.active-theme > a[href$=run-themler]')
+                .attr('href', href)
+                .html(caption);
         });
     </script>
-    <?php
+    <style>
+        a[href$=run-themler] {
+            display: none !important;
+        }
+    </style>
+<?php
 }
 add_action('admin_footer-themes.php', 'theme_fix_customize_link');
 
@@ -73,12 +98,12 @@ function theme_get_preview_link($link) {
     $template = get_template() . '_preview';
     $preview_args = has_action('setup_theme', 'preview_theme')
         ? array('preview' => '1', 'template' => $template, 'stylesheet' => $template, 'preview_iframe' => 1, 'TB_iframe' => 'true')
-        : array('preview' => '1', 'theme' => $template, 'wp_customize' => 'on', 'nonce' => wp_create_nonce("preview-customize_$template"), 'original' => $template);
+        : array('preview' => '1', 'theme' => $template, 'wp_customize' => 'on', 'nonce' => wp_create_nonce("preview-customize_$template"), 'original' => get_template());
 
     return add_query_arg($preview_args, $link);
 }
 
-function theme_edit_form_after_title($post) {
+function theme_add_themler_button($post) {
     $type = $post->post_type;
     if ($type === 'post' || $type === 'page') {
         $editor_link = add_query_arg(array(
@@ -87,13 +112,11 @@ function theme_edit_form_after_title($post) {
 
         $tip = 'Edit the ' . $type . ' in Themler<br><br><strong>Note:</strong> If you have other Themler instance opened in a different tab or browser, make sure to have saved and closed it. Otherwise unsaved changes will be lost.';
 ?>
-        <div style="margin-top: 5px; margin-bottom: 10px;">
-            <a href="<?php echo $editor_link; ?>" id="edit-in-themler" class="tooltips button"><?php _e('Edit in Themler', THEME_NS); ?><span><?php echo $tip; ?></span></a>
-        </div>
+            <a href="<?php echo $editor_link; ?>" id="edit-in-themler" class="tooltips button"><?php _e('Edit in Themler', 'default'); ?><span><?php echo $tip; ?></span></a>
 <?php
     }
 }
-add_action('edit_form_after_title', 'theme_edit_form_after_title');
+add_action('themler_edit_form_buttons', 'theme_add_themler_button');
 
 function theme_get_preview_theme_name($theme_name) {
     return $theme_name . ' (Preview)';
@@ -217,16 +240,16 @@ function theme_add_billion_submenu() {
     global $submenu;
     $menu_slug = theme_get_editor_link();
     $capability = 'edit_themes';
-    $submenu[$menu_slug][10] = array(__('Run Themler', THEME_NS), $capability, $menu_slug);
-    $submenu[$menu_slug][12] = array(__('Forums & Answers', THEME_NS), $capability, 'http://answers.themler.com/Questions');
-    $submenu[$menu_slug][13] = array(__('Tutorials', THEME_NS), $capability, 'http://answers.themler.com/articles/4695');
-    $submenu[$menu_slug][14] = array(__('More themes', THEME_NS), $capability, 'http://billionthemes.com/Themes/Index?Search.Cms=3&Search.Themler=True');
+    $submenu[$menu_slug][10] = array(__('Run Themler', 'default'), $capability, $menu_slug);
+    $submenu[$menu_slug][12] = array(__('Forums & Answers', 'default'), $capability, 'http://answers.themler.com/Questions');
+    $submenu[$menu_slug][13] = array(__('Tutorials', 'default'), $capability, 'http://answers.themler.com/articles/4695');
+    $submenu[$menu_slug][14] = array(__('More themes', 'default'), $capability, 'http://billionthemes.com/Themes/Index?Search.Cms=3&Search.Themler=True');
     return true;
 }
 add_action('custom_menu_order', 'theme_add_billion_submenu');
 
 function theme_add_export_option_page() {
-    add_theme_page(__('Billion Themler', THEME_NS), __('Billion Themler', THEME_NS), 'edit_themes', 'theme_editor', 'theme_editor');
+    add_theme_page(__('Billion Themler', 'default'), __('Billion Themler', 'default'), 'edit_themes', 'theme_editor', 'theme_editor');
     global $submenu;
     if (is_array($submenu['themes.php'])) {
         foreach($submenu['themes.php'] as $key => $value) {
@@ -741,7 +764,7 @@ function theme_reload_themes_info() {
             $themes_info[$name] = array(
                 'themeName' => $template,
                 'thumbnailUrl' => $screenshot,
-                'openUrl' => theme_get_editor_link($template),
+                'openUrl' => theme_get_editor_link($template) . '&ask_import_content=1',
                 'isActive' => $current_template === $template
             );
         }
@@ -1328,6 +1351,7 @@ theme_add_export_action('theme_upload_image', true);
 // other actions:
 load_template($base_template_dir . '/export/project.php');
 load_template($base_template_dir . '/export/posts-actions.php');
+load_template($base_template_dir . '/export/import-actions.php');
 
 function theme_get_editable_content()
 {
@@ -1472,7 +1496,8 @@ function theme_get_posts()
                 'name' => $post->ID,
                 'id' => $post->ID,
                 'caption' => trim(esc_html(strip_tags(get_the_title($post)))),
-				'url' => theme_get_preview_link(get_permalink($post))            );
+				'url' => theme_get_preview_link(get_permalink($post))
+            );
         }
     }
     ProviderLog::end('generate result');

@@ -89,7 +89,7 @@ if ($fdm_controller != null) {
         if ($query->have_posts()) {
             $query->the_post();
             global $post;
-            register_template('productOverview', '/?p=' . $post->ID . '&custom_template=productOverview');
+            register_template('productOverview', add_query_arg(array('custom_template' => 'productOverview'), get_permalink($post->ID)), true, true);
         }
         allow_template_duplicate('ProductOverviewTemplate');
     }
@@ -104,7 +104,11 @@ if ($fdm_controller != null) {
 ?>
 <?php
     if (theme_woocommerce_enabled()) {
-        register_template('shoppingCartTemplate', '/?p=' . woocommerce_get_page_id('cart') . '&custom_template=shoppingCartTemplate');
+        register_template('shoppingCartTemplate', add_query_arg(
+            array('custom_template' => 'shoppingCartTemplate'),
+            get_permalink(woocommerce_get_page_id('cart'))),
+            true, true
+        );
     }
 ?>
 <?php

@@ -43,7 +43,7 @@ if ($ver !== false) {
 }
 
 $manifest_attr = $ver !== false
-    ? ' manifest="' . add_query_arg(array('ver' => $ver, 'action' => 'theme_get_manifest'), admin_url('admin-ajax.php', 'relative')) . '"'
+    ? ' manifest="' . add_query_arg(array('action' => 'theme_get_manifest', 'ver' => $ver), admin_url('admin-ajax.php', 'relative')) . '"'
     : '';
 
 $project_params = array(

@@ -4,9 +4,9 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 // widget extra options
 global $theme_widgets_style;
 $theme_widgets_style = array(
-	'default' => __('sidebar default', THEME_NS),
-	'block'   => __('block', THEME_NS),
-	'simple'  => __('simple text', THEME_NS)
+	'default' => __('sidebar default', 'default'),
+	'block'   => __('block', 'default'),
+	'simple'  => __('simple text', 'default')
 );
 
 function theme_get_widget_style($id, $style = null) {

@@ -12,16 +12,16 @@ if (!empty($_SERVER['SCRIPT_FILENAME']) && 'comments.php' == basename($_SERVER['
 	die('Please do not load this page directly. Thanks!');
 
 if (post_password_required()) {
-	echo '<p class="nocomments">' . __('This post is password protected. Enter the password to view any comments.', THEME_NS) . '</p>';
+	echo '<p class="nocomments">' . __('This post is password protected. Enter the password to view any comments.', 'default') . '</p>';
 	return;
 }
 
 if (have_comments()) {
 	theme_ob_start();
-	printf(_n('One Response to %2$s', '%1$s Responses to %2$s', get_comments_number(), THEME_NS), number_format_i18n(get_comments_number()), '<em>' . get_the_title() . '</em>');
+	printf(_n('One Response to %2$s', '%1$s Responses to %2$s', get_comments_number(), 'default'), number_format_i18n(get_comments_number()), '<em>' . get_the_title() . '</em>');
 	echo '<h4 id="comments">' . theme_ob_get_clean() . '</h4>';
-	$prev_link = get_previous_comments_link(__('<span class="meta-nav">&larr;</span> Older Comments', THEME_NS));
-	$next_link = get_next_comments_link(__('Newer Comments <span class="meta-nav">&rarr;</span>', THEME_NS));
+	$prev_link = get_previous_comments_link(__('<span class="meta-nav">&larr;</span> Older Comments', 'default'));
+	$next_link = get_next_comments_link(__('Newer Comments <span class="meta-nav">&rarr;</span>', 'default'));
 	theme_page_navigation(array('prev_link' => $prev_link, 'next_link' => $next_link));
 	echo '<ul id="comments-list">';
 	wp_list_comments('type=all&callback=theme_comment');

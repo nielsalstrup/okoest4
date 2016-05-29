@@ -3,20 +3,16 @@
         $theme_hide_sidebar_area = true;
         ob_start();
 ?>
-        <div class="data-control-id-1445220 bd-layoutcontainer-10 bd-columns
-    
-    ">
+        <div class="data-control-id-1445220 bd-layoutcontainer-10 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class="data-control-id-1445222 bd-columnwrapper-24 
  col-md-12">
-    <div class="bd-layoutcolumn-24 bd-column" ><div class="bd-vertical-align-wrapper"><div class="data-control-id-1445214 bd-layoutcontainer-8 bd-columns
-    
-    ">
+    <div class="bd-layoutcolumn-24 bd-column" ><div class="bd-vertical-align-wrapper"><div class="data-control-id-1445214 bd-layoutcontainer-8 bd-columns">
     <div class="bd-container-inner">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row ">
                 <div class="data-control-id-1445216 bd-columnwrapper-19 
  col-lg-6
  col-md-6">

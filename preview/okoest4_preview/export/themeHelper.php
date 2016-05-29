@@ -31,6 +31,7 @@ function theme_get_theme_archive() {
 
     $new_name = isset($_REQUEST['themeName']) ? $_REQUEST['themeName'] : $name;
     $editable_version = !isset($_REQUEST['includeEditor']) || $_REQUEST['includeEditor'] === 'true';
+    $include_content = isset($_REQUEST['includeContent']) && $_REQUEST['includeContent'] === 'true';
 
     if (!$new_name)
         throw new Exception('Error: theme name is empty');
@@ -45,6 +46,11 @@ function theme_get_theme_archive() {
     }
     $preview_new_template = $new_name . '_preview';
     $archive = new PclZip($archive_file);
+
+    // move old content to tmp folder
+    $tmp_content_dir = $base_upload_dir['basedir'] . '/theme-content';
+    FilesHelper::empty_dir($tmp_content_dir, true);
+    FilesHelper::rename_if_exists($base_template_dir . '/content', $tmp_content_dir);
 
     if (0 == $archive->create($base_template_dir,
             PCLZIP_OPT_ADD_PATH,    $new_name,
@@ -73,6 +79,20 @@ function theme_get_theme_archive() {
             throw new Exception("Error: cannot remove export dir");
     }
 
+    if ($include_content) {
+        $content_dir = theme_include_content();
+        if (false !== $content_dir) {
+            if (0 == $archive->add($content_dir,
+                    PCLZIP_OPT_ADD_PATH,    $new_name . '/content/',
+                    PCLZIP_OPT_REMOVE_PATH, $content_dir)) {
+                throw new Exception("Content-zip error: " . $archive->errorInfo(true));
+            }
+        }
+    }
+
+    // restore content folder
+    FilesHelper::rename_if_exists($tmp_content_dir, $base_template_dir . '/content');
+
     if ($current_name === $name) {
         theme_set_name($base_template_dir . '/style.css', $current_name);
         theme_set_name($preview_template_dir . '/style.css', theme_get_preview_theme_name($current_name));
@@ -82,6 +102,54 @@ function theme_get_theme_archive() {
         'name' => $new_name
     );
 }
+
+function theme_include_content() {
+    if (!class_exists('ThemlerContentStorage')) {
+        // plugin disabled
+        return false;
+    }
+
+    $exporter = new ThemlerContentExporter();
+
+    $content = $exporter->export(array(
+        'posts' => array(
+            'limit' => themler_get_option('themler_export_post_limit'),
+        ),
+        'pages' => array(
+            'limit' => themler_get_option('themler_export_page_limit'),
+        ),
+    ));
+
+    $content_storage = new ThemlerContentStorage();
+    $content_storage->createFolder($content);
+    $content_dir = $content_storage->getDataDirectory();
+    return $content_dir;
+}
+
+function theme_prepare_theme_to_get() {
+    if (isset($_REQUEST['id'])) {
+        $theme = wp_get_theme($_REQUEST['id']);
+        if (!$theme->exists())
+            throw new Exception('Error: Theme '.$_REQUEST['id'].' does not exists');
+    } else {
+        $theme = wp_get_theme();
+    }
+
+    $include_content = isset($_REQUEST['includeContent']) && $_REQUEST['includeContent'] === 'true';
+
+    $theme_dir = $theme->get_template_directory();
+    $theme_content_dir = $theme_dir . '/content';
+
+    FilesHelper::empty_dir($theme_content_dir, true);
+    if ($include_content) {
+        $content_dir = theme_include_content();
+        if (false !== $content_dir) {
+            FilesHelper::rename_if_exists($content_dir, $theme_content_dir);
+        }
+    }
+    return array('result' => 'done');
+}
+theme_add_export_action('theme_prepare_theme_to_get');
 
 function theme_rename_option($option_name, $new_option_name) {
     $value = get_option($option_name);

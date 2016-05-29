@@ -41,10 +41,10 @@ if (!theme_is_converted()) {
 
 function theme_options_import_notice_action() {
 ?>
-    <h3><?php echo __('Do you want to import Content?', THEME_NS); ?></h3>
+    <h3><?php echo __('Do you want to import Content?', 'default'); ?></h3>
     <p id="theme-options-content-import-notice">
-        <button class="button start-import-without-cleanup"><?php echo __('Add Content', THEME_NS); ?></button>
-        <button class="button start-import"><?php echo __('Replace imported Content', THEME_NS); ?></button>
+        <button class="button start-import-without-cleanup"><?php echo __('Add Content', 'default'); ?></button>
+        <button class="button start-import"><?php echo __('Replace imported Content', 'default'); ?></button>
     </p>
     <script>
         jQuery(document).ready(function ($) {
@@ -82,11 +82,11 @@ function theme_content_import_notice_action() {
 ?>
     <div id="content-import-notice" class="updated">
         <p>
-            <?php echo __('Do you want to import Content?', THEME_NS); ?>
+            <?php echo __('Do you want to import Content?', 'default'); ?>
             &nbsp; &nbsp; &nbsp; &nbsp;
-            <button class="button start-import-without-cleanup"><?php echo __('Add Content', THEME_NS); ?></button>
-            <button class="button start-import"><?php echo __('Replace imported Content', THEME_NS); ?></button>
-            <button class="button hide-notice"><?php echo __('Close', THEME_NS); ?></button>
+            <button class="button start-import-without-cleanup"><?php echo __('Add Content', 'default'); ?></button>
+            <button class="button start-import"><?php echo __('Replace imported Content', 'default'); ?></button>
+            <button class="button hide-notice"><?php echo __('Close', 'default'); ?></button>
         </p>
         <script>
             jQuery(document).ready(function ($) {

@@ -90,7 +90,7 @@ class CoreUpdateHelper {
         if (self::_needPluginUpdate()) {
             self::_updatePlugin();
         }
-        self::_updateScriptsAndStyles();
+        self::_updateScriptsAndStyles(self::$pluginDest . '/shortcodes/assets');
         self::_activatePlugin();
     }
 
@@ -101,6 +101,9 @@ class CoreUpdateHelper {
 
         require_once(ABSPATH . 'wp-admin/includes/class-pclzip.php');
         $archive = new PclZip(self::$zipSource);
+
+        // update scripts and styles before creating zip
+        self::_updateScriptsAndStyles(self::$pluginSource . '/shortcodes/assets');
 
         if (0 == $archive->create(self::$pluginSource, PCLZIP_OPT_REMOVE_PATH, self::$themeDir . '/export'))
             throw new Exception("Unable to create themler-core zip. Create error: " . $archive->errorInfo(true));
@@ -164,14 +167,38 @@ class CoreUpdateHelper {
         }
     }
 
-    private static function _updateScriptsAndStyles() {
-        FilesHelper::create_dir(self::$pluginDest . '/shortcodes/assets');
-        FilesHelper::create_dir(self::$pluginDest . '/shortcodes/assets/css');
-        FilesHelper::create_dir(self::$pluginDest . '/shortcodes/assets/js');
-        FilesHelper::copy_recursive(self::$themeDir . '/bootstrap.css', self::$pluginDest . '/shortcodes/assets/css/bootstrap.css');
-        FilesHelper::copy_recursive(self::$themeDir . '/bootstrap.min.css', self::$pluginDest . '/shortcodes/assets/css/bootstrap.min.css');
-        FilesHelper::copy_recursive(self::$themeDir . '/script.js', self::$pluginDest . '/shortcodes/assets/js/script.js');
-        FilesHelper::copy_recursive(self::$themeDir . '/fonts', self::$pluginDest . '/shortcodes/assets/css/fonts');
+    private static function _updateScriptsAndStyles($dest) {
+        FilesHelper::create_dir($dest);
+        FilesHelper::create_dir($dest . '/css');
+        FilesHelper::create_dir($dest . '/js');
+
+        self::_copyAssetsFromTheme(self::$themeDir, $dest, array(
+            'bootstrap.css',
+            'bootstrap.min.css',
+            'style.css',
+            'style.min.css',
+            'layout.ie.css',
+
+            'bootstrap.min.js',
+            'script.js',
+            'layout.core.js',
+            'layout.ie.js',
+        ));
+        FilesHelper::copy_recursive(self::$themeDir . '/fonts', $dest . '/css/fonts');
+    }
+
+    private static function _copyAssetsFromTheme($src, $dest, $files) {
+        foreach ($files as $file) {
+            $src_path = $src . '/' . $file;
+            $path_info = pathinfo($src_path);
+            if (empty($path_info['extension'])) {
+
+            } else if ($path_info['extension'] === 'css') {
+                FilesHelper::copy_recursive($src_path, $dest . '/css/' . $file);
+            } else if ($path_info['extension'] === 'js') {
+                FilesHelper::copy_recursive($src_path, $dest . '/js/' . $file);
+            }
+        }
     }
 
     private static function _activatePlugin() {

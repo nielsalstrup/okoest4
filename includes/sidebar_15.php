@@ -1,5 +1,5 @@
 <?php
-theme_register_sidebar('Area-3',  __('WP Bottom Widget Widget Area', THEME_NS));
+theme_register_sidebar('Area-3',  __('WP Bottom Widget Widget Area', 'default'));
 
 function theme_block_7_15($title = '', $content = '', $class = '', $id = ''){
     ob_start();

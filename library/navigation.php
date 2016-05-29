@@ -408,12 +408,12 @@ function theme_get_manual_menu($args = array()){
     if ( ! is_user_logged_in() ) {
         if ( get_option('users_can_register') ){
             $page['href'] = site_url('wp-login.php?action=register', 'login');
-            $page['post_title'] = __('Register', THEME_NS);
+            $page['post_title'] = __('Register', 'default');
             $page['id'] = 'register';
         }
     } else {
         $page['href'] = admin_url();
-        $page['post_title'] = __('Site Admin', THEME_NS);
+        $page['post_title'] = __('Site Admin', 'default');
         $page['id'] = 'site-admin';
     }
     if (isset($page['href'])) {
@@ -423,11 +423,11 @@ function theme_get_manual_menu($args = array()){
     $page = array();
     if ( ! is_user_logged_in() ){
         $page['href'] = esc_url( wp_login_url() );
-        $page['post_title'] = __('Log in', THEME_NS);
+        $page['post_title'] = __('Log in', 'default');
         $page['id'] = 'login';
     } else{
         $page['href'] =  esc_url( wp_logout_url() );
-        $page['post_title'] = __('Log out', THEME_NS);
+        $page['post_title'] = __('Log out', 'default');
         $page['id'] = 'logout';
     }
     if (isset($page['href'])) {

@@ -77,7 +77,7 @@ if (!is_page() || theme_get_meta_option($post->ID, 'theme_show_page_title')) {
 </div>
 	
 		<div class=" bd-posticonauthor-3">
-    <a href="<?php echo get_author_posts_url(get_the_author_meta('ID')) ?>" title="<?php echo esc_attr(__('View all posts by ' . get_the_author(), THEME_NS)) ?>">
+    <a href="<?php echo get_author_posts_url(get_the_author_meta('ID')) ?>" title="<?php echo esc_attr(__('View all posts by ' . get_the_author(), 'default')) ?>">
         <span class=" bd-icon bd-icon-36"><span><?php echo get_the_author(); ?></span></span>
     </a>
 </div>
@@ -108,7 +108,7 @@ if (theme_is_preview() && is_singular()) {
 </div>
 	
 		<?php if ($post && !is_singular() && !theme_is_empty_html('Continue reading...')): ?>
-    <a class="bd-postreadmore-4 bd-button "   title="<?php echo strip_tags('Continue reading...') ?>" href="<?php echo get_permalink($post->ID) ?>"><?php _e('Continue reading...'); ?></a>
+    <a class="bd-postreadmore-4 bd-button "   title="<?php echo strip_tags('Continue reading...') ?>" href="<?php echo get_permalink($post->ID) ?>"><?php _e('Continue reading...', 'default'); ?></a>
 <?php endif; ?>
     </div>
 </div>

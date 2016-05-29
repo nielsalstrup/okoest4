@@ -62,8 +62,8 @@ add_action( 'admin_bar_menu', 'theme_override_adminbar', 999 );
 
 //Correct lost password link
 
-function redirect_lostpassword_url() {
-    return home_url('/wp-login?action=lostpassword');
+function redirect_lostpassword_url( $lostpassword_url ) {
+    return home_url('/wp-login.php?action=lostpassword');
 }
 
-apply_filters( 'lostpassword_url', redirect_lostpassword_url(),'');
+add_filter( 'lostpassword_url','redirect_lostpassword_url', 10, 1 );

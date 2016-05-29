@@ -179,6 +179,15 @@ function themler_restore_original_shortcodes() {
     $shortcode_tags = array_pop($themler_shortcodes_stack); // restore original shortcodes
 }
 
+function themler_render_shortcode($content, $tag, $func) {
+    themler_save_original_shortcodes(array(
+        "#^$tag$#" => $func
+    ));
+    $ret = do_shortcode($content);
+    themler_restore_original_shortcodes();
+    return $ret;
+}
+
 function themler_old_row_filter($content) {
     if (!ShortcodesUtility::$enable_filters)
         return $content;

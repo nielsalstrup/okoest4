@@ -6,7 +6,7 @@ function theme_print_options() {
 	?>
 	<div class="wrap">
 		<div id="icon-themes" class="icon32"><br /></div>
-		<h2><?php _e('Theme Options', THEME_NS); ?></h2>
+		<h2><?php _e('Theme Options', 'default'); ?></h2>
 		<?php
 		if (isset($_REQUEST['Submit'])) {
 			foreach ($theme_options as $value) {
@@ -23,19 +23,19 @@ function theme_print_options() {
 				}
 				update_option($id, $val);
 			}
-			echo '<div id="message" class="updated fade"><p><strong>' . __('Settings saved.', THEME_NS) . '</strong></p></div>' . "\n";
+			echo '<div id="message" class="updated fade"><p><strong>' . __('Settings saved.', 'default') . '</strong></p></div>' . "\n";
 		}
 		if (isset($_REQUEST['Reset'])) {
 			foreach ($theme_options as $value) {
 				delete_option(theme_get_array_value($value, 'id'));
 			}
-			echo '<div id="message" class="updated fade"><p><strong>' . __('Settings restored.', THEME_NS) . '</strong></p></div>' . "\n";
+			echo '<div id="message" class="updated fade"><p><strong>' . __('Settings restored.', 'default') . '</strong></p></div>' . "\n";
 		}
 		echo '<form method="post" id="theme_options_form">' . "\n";
 		$in_form_table = false;
 		$dependent_fields = array();
         $op_by_id = array();
-        $used_when = __('Used when <strong>"%s"</strong> is enabled', THEME_NS);
+        $used_when = __('Used when <strong>"%s"</strong> is enabled', 'default');
 
 		foreach ($theme_options as $op) {
 			$id = theme_get_array_value($op, 'id');
@@ -99,8 +99,8 @@ function theme_print_options() {
 		echo "</script>" . PHP_EOL;
 		?>
 		<p class="submit">
-			<input name="Submit" type="submit" class="button-primary" value="<?php echo esc_attr(__('Save Changes', THEME_NS)) ?>" />
-			<input name="Reset" type="submit" class="button-secondary" value="<?php echo esc_attr(__('Reset to Default', THEME_NS)) ?>" />
+			<input name="Submit" type="submit" class="button-primary" value="<?php echo esc_attr(__('Save Changes', 'default')) ?>" />
+			<input name="Reset" type="submit" class="button-secondary" value="<?php echo esc_attr(__('Reset to Default', 'default')) ?>" />
 		</p>
 	</form>
 		<?php do_action('theme_options'); ?>
@@ -150,7 +150,7 @@ function theme_print_option_control($op, $val) {
 
 function theme_add_meta_boxes() {
 	add_meta_box( 'theme_meta_box',
-		__('Theme Options', THEME_NS),
+		__('Theme Options', 'default'),
 		'theme_print_page_meta_box',
 		'page',
 		'side',

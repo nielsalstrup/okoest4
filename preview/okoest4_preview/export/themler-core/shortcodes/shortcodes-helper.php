@@ -189,6 +189,81 @@ class ShortcodesUtility
     }
 
 
+    private static $_bad_quote = "\xe2\x80\x9d";
+
+    private static function _convertBadAttributes($attrs) {
+        return str_replace(self::$_bad_quote, '"', $attrs);
+    }
+
+    /**
+     * This function if modified version of do_shortcode_tag
+     * see wp-includes/shortcodes.php
+     *
+     * @param array $m matches
+     * @return string
+     */
+    public static function convertBadShortcode($m) {
+        // allow [[foo]] syntax for escaping a tag
+        if ($m[1] == '[' && $m[6] == ']') {
+            return $m[0];
+        }
+
+        /**
+         * 2 - tag
+         * 3 - attributes
+         * 5 - inner content
+         */
+
+        $attrs = self::_convertBadAttributes($m[3]);
+        if ($attrs) {
+            $attrs = " $attrs";
+        }
+
+        if (isset($m[5])) {
+            // enclosing tag - extra parameter
+            return $m[1] . '[' . $m[2] . $attrs . ']' . self::convertBadContent($m[5]) . '[/' . $m[2] . ']' . $m[6];
+        } else {
+            // self-closing tag
+            return $m[1] . '[' . $m[2] . $attrs . ']' . $m[6];
+        }
+    }
+
+    /**
+     * Replace 0x201D (unicode) symbol in shortcode attributes
+     *
+     * This function if modified version of do_shortcode
+     * see wp-includes/shortcodes.php
+     *
+     * @param string $content
+     * @return string
+     */
+    public static function convertBadContent($content) {
+
+        global $shortcode_tags;
+
+        if (false === strpos($content, '[') || false === strpos($content, self::$_bad_quote)) {
+            return $content;
+        }
+
+        if (empty($shortcode_tags) || !is_array($shortcode_tags)) {
+            return $content;
+        }
+
+        // Find all registered tag names in $content.
+        preg_match_all('@\[([^<>&/\[\]\x00-\x20=]++)@', $content, $matches);
+        $tagnames = array_intersect(array_keys($shortcode_tags), $matches[1]);
+
+        if (empty($tagnames)) {
+            return $content;
+        }
+
+        $pattern = get_shortcode_regex($tagnames);
+        $content = preg_replace_callback("/$pattern/", 'ShortcodesUtility::convertBadShortcode', $content);
+
+        return $content;
+    }
+
+
     private static $_styles = array();
 
     public static function addResult($content, $styles = '') {
